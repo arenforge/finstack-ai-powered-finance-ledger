@@ -13,7 +13,7 @@ const startRecurringTransactionJob = require('./jobs/recurringTransactions');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
+const mongoUri = process.env.MONGODB_DIRECT_URI || process.env.MONGODB_URI || process.env.MONGO_URI;
 
 app.use(cors());
 app.use(express.json());
