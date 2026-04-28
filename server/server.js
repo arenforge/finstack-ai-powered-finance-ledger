@@ -25,15 +25,19 @@ app.use('/api/bills', verifyFirebaseToken, billRoutes);
 app.use('/api/ai', verifyFirebaseToken, aiRoutes);
 app.use('/api/shared-budgets', verifyFirebaseToken, sharedBudgetRoutes);
 
-mongoose
-  .connect(process.env.MONGODB_URI || '')
-  .then(() => {
-    console.log('MongoDB connected');
-    startBillReminderJob();
-    startRecurringTransactionJob();
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-  })
-  .catch((error) => {
-    console.error('MongoDB connection failed:', error.message);
-    process.exit(1);
-  });
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+if (process.env.MONGODB_URI) {
+  mongoose
+    .connect(process.env.MONGODB_URI)
+    .then(() => {
+      console.log('MongoDB connected');
+      startBillReminderJob();
+      startRecurringTransactionJob();
+    })
+    .catch((error) => {
+      console.error('MongoDB connection failed:', error.message);
+    });
+} else {
+  console.warn('MONGODB_URI is not set. API routes that need MongoDB will fail until server/.env is configured.');
+}
