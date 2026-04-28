@@ -1,0 +1,8 @@
+.transactions-page .filters { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.table-card { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; background: #fff; }
+th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; }
+th { color: var(--muted); font-size: 13px; }
+.pager { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 14px; }
+.pager button { border: 1px solid var(--border); border-radius: 10px; background: #fff; padding: 10px 14px; }
+@media (max-width: 768px) { .transactions-page .filters { grid-template-columns: 1fr; } }

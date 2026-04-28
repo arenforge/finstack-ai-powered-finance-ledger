@@ -1,0 +1,6 @@
+.shared-card { padding: 18px; display: grid; gap: 12px; }
+.shared-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.shared-head h2 { margin: 0; }
+.shared-card p { margin: 0; color: var(--muted); }
+.badge.owner { background: var(--primary-light); color: var(--primary); }
+.badge.viewer { background: var(--warning-light); color: #92400e; }

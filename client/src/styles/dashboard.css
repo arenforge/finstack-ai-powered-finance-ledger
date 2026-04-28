@@ -1,0 +1,4 @@
+.chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.chart-card, .list-card { padding: 18px; }
+.chart-card h2, .list-card h2 { margin: 0 0 14px; font-size: 18px; }
+.chart-card.wide { grid-column: 1 / -1; }

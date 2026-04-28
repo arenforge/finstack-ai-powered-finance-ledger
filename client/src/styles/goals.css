@@ -1,0 +1,7 @@
+.goal-card { position: relative; display: grid; gap: 12px; padding: 18px; }
+.goal-card h2 { margin: 0; font-size: 20px; }
+.goal-card p { margin: 0; color: var(--muted); }
+.overdue { color: var(--danger); font-weight: 700; }
+.save-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+.save-row button { border: 1px solid var(--border); border-radius: 10px; background: #fff; padding: 10px; }
+.delete-card { position: absolute; top: 12px; right: 12px; }
