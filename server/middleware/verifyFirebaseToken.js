@@ -27,13 +27,23 @@ function initFirebaseAdmin() {
 
 async function verifyFirebaseToken(req, res, next) {
   try {
-    initFirebaseAdmin();
     const header = req.headers.authorization || '';
     const token = header.startsWith('Bearer ') ? header.slice(7) : null;
 
     if (!token) {
       return res.status(401).json({ message: 'Missing Firebase ID token.' });
     }
+
+    if (process.env.DEV_AUTH_BYPASS === 'true' && token === 'dev-token') {
+      req.user = {
+        uid: 'demo-user',
+        email: 'demo@local.test',
+        name: 'Demo User'
+      };
+      return next();
+    }
+
+    initFirebaseAdmin();
 
     const decoded = await admin.auth().verifyIdToken(token);
     req.user = {

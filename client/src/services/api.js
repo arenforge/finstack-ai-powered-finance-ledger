@@ -6,6 +6,11 @@ const api = axios.create({
 });
 
 api.interceptors.request.use(async (config) => {
+  if (process.env.REACT_APP_DEMO_AUTH === 'true') {
+    config.headers.Authorization = 'Bearer dev-token';
+    return config;
+  }
+
   const user = auth.currentUser;
   if (user) {
     const token = await user.getIdToken();

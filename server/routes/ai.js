@@ -1,6 +1,7 @@
 const express = require('express');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const Transaction = require('../models/Transaction');
+const { store, useMemoryStore } = require('./devStore');
 
 const router = express.Router();
 
@@ -30,7 +31,9 @@ router.post('/query', async (req, res) => {
 
     const start = new Date();
     start.setMonth(start.getMonth() - 3);
-    const transactions = await Transaction.find({ userId: req.user.uid, date: { $gte: start } }).sort({ date: -1 });
+    const transactions = useMemoryStore()
+      ? store.transactions.filter((item) => item.userId === req.user.uid && new Date(item.date) >= start)
+      : await Transaction.find({ userId: req.user.uid, date: { $gte: start } }).sort({ date: -1 });
     const summary = summarizeTransactions(transactions);
 
     const systemPrompt = `You are a personal finance assistant. The user logs their daily expenses and income.
