@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import QuickAddModal from './components/QuickAddModal';
-import { AuthProvider, useAuth } from './hooks/useAuth';
+import { AuthProvider, useAuth } from './hooks/useAuth.jsx';
 import Auth from './pages/Auth';
 import Today from './pages/Today';
 import Dashboard from './pages/Dashboard';

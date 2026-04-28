@@ -2,11 +2,11 @@ import axios from 'axios';
 import { auth } from '../firebase';
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000'
+  baseURL: import.meta.env.REACT_APP_API_URL || 'http://localhost:5000'
 });
 
 api.interceptors.request.use(async (config) => {
-  if (process.env.REACT_APP_DEMO_AUTH === 'true') {
+  if (import.meta.env.REACT_APP_DEMO_AUTH === 'true') {
     config.headers.Authorization = 'Bearer dev-token';
     return config;
   }
