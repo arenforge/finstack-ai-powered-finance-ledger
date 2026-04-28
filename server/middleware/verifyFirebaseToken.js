@@ -1,4 +1,5 @@
 const admin = require('firebase-admin');
+const mongoose = require('mongoose');
 const User = require('../models/User');
 
 let firebaseReady = false;
@@ -52,11 +53,20 @@ async function verifyFirebaseToken(req, res, next) {
       name: decoded.name || decoded.email || ''
     };
 
-    await User.findOneAndUpdate(
-      { uid: req.user.uid },
-      { uid: req.user.uid, email: req.user.email, name: req.user.name },
-      { upsert: true, new: true, setDefaultsOnInsert: true }
-    );
+    if (mongoose.connection.readyState !== 1) {
+      console.warn('User sync skipped: MongoDB is not connected.');
+      return next();
+    }
+
+    try {
+      await User.findOneAndUpdate(
+        { uid: req.user.uid },
+        { uid: req.user.uid, email: req.user.email, name: req.user.name },
+        { upsert: true, new: true, setDefaultsOnInsert: true }
+      );
+    } catch (dbError) {
+      console.warn('User sync skipped:', dbError.message);
+    }
 
     next();
   } catch (error) {

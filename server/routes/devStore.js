@@ -1,4 +1,5 @@
 const { randomUUID } = require('crypto');
+const mongoose = require('mongoose');
 
 const store = {
   transactions: [],
@@ -8,7 +9,7 @@ const store = {
 };
 
 function useMemoryStore() {
-  return process.env.DEV_DATA_MEMORY === 'true';
+  return process.env.DEV_DATA_MEMORY === 'true' || mongoose.connection.readyState !== 1;
 }
 
 function makeItem(payload) {

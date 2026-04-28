@@ -10,7 +10,7 @@ import {
 import { auth, googleProvider } from '../firebase';
 
 const AuthContext = createContext(null);
-const demoAuthEnabled = process.env.REACT_APP_DEMO_AUTH === 'true';
+const demoAuthEnabled = import.meta.env.REACT_APP_DEMO_AUTH === 'true';
 
 function makeDemoUser(name, email) {
   return {
