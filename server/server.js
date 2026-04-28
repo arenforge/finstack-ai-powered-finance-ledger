@@ -13,6 +13,7 @@ const startRecurringTransactionJob = require('./jobs/recurringTransactions');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
 
 app.use(cors());
 app.use(express.json());
@@ -27,9 +28,9 @@ app.use('/api/shared-budgets', verifyFirebaseToken, sharedBudgetRoutes);
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
-if (process.env.MONGODB_URI) {
+if (mongoUri) {
   mongoose
-    .connect(process.env.MONGODB_URI)
+    .connect(mongoUri)
     .then(() => {
       console.log('MongoDB connected');
       startBillReminderJob();
