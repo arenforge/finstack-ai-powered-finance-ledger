@@ -8,6 +8,7 @@ const goalRoutes = require('./routes/goals');
 const billRoutes = require('./routes/bills');
 const aiRoutes = require('./routes/ai');
 const sharedBudgetRoutes = require('./routes/sharedBudgets');
+const userRoutes = require('./routes/user');
 const startBillReminderJob = require('./jobs/billReminder');
 const startRecurringTransactionJob = require('./jobs/recurringTransactions');
 
@@ -25,6 +26,7 @@ app.use('/api/goals', verifyFirebaseToken, goalRoutes);
 app.use('/api/bills', verifyFirebaseToken, billRoutes);
 app.use('/api/ai', verifyFirebaseToken, aiRoutes);
 app.use('/api/shared-budgets', verifyFirebaseToken, sharedBudgetRoutes);
+app.use('/api/user', verifyFirebaseToken, userRoutes);
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 

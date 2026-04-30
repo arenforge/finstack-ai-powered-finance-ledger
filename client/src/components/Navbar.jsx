@@ -9,7 +9,8 @@ const links = [
   ['/goals', 'Goals'],
   ['/bills', 'Bills'],
   ['/ai', 'AI'],
-  ['/shared', 'Shared']
+  ['/shared', 'Shared'],
+  ['/settings', 'Settings']
 ];
 
 export default function Navbar() {

@@ -12,6 +12,7 @@ import Goals from './pages/Goals';
 import Bills from './pages/Bills';
 import AIChat from './pages/AIChat';
 import SharedBudgets from './pages/SharedBudgets';
+import Settings from './pages/Settings';
 import './styles/global.css';
 
 function ProtectedRoute({ children }) {
@@ -43,6 +44,7 @@ function AppShell() {
         <Route path="/bills" element={<ProtectedRoute><Bills /></ProtectedRoute>} />
         <Route path="/ai" element={<ProtectedRoute><AIChat /></ProtectedRoute>} />
         <Route path="/shared" element={<ProtectedRoute><SharedBudgets /></ProtectedRoute>} />
+        <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/today" replace />} />
       </Routes>
       {!isAuth && <button className="fab" type="button" onClick={() => setQuickOpen(true)} aria-label="Quick add">+</button>}
