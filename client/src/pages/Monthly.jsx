@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 import ProgressBar from '../components/ProgressBar';
 import SummaryCard from '../components/SummaryCard';
+import Spinner from '../components/Spinner';
 import { getMonthlySummary, getTransactions } from '../services/api';
 import '../styles/monthly.css';
 
@@ -11,10 +12,13 @@ export default function Monthly() {
   const [month, setMonth] = useState(new Date().toISOString().slice(0, 7));
   const [summary, setSummary] = useState({ totalIncome: 0, totalExpense: 0, net: 0, categories: [] });
   const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
+    setLoading(true);
     setSummary(await getMonthlySummary(month));
     setTransactions(await getTransactions({ month }));
+    setLoading(false);
   }, [month]);
   useEffect(() => { load(); }, [load]);
   window.financeRefresh = load;
@@ -33,6 +37,8 @@ export default function Monthly() {
   };
 
   const savingsRate = summary.totalIncome ? Math.round((summary.net / summary.totalIncome) * 100) : 0;
+
+  if (loading) return <Spinner fullPage />;
 
   return (
     <main className="page monthly-page">

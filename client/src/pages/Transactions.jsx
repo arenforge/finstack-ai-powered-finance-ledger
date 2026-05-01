@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import Spinner from '../components/Spinner';
 import { deleteTransaction, updateTransaction } from '../services/api';
 import { useTransactions } from '../hooks/useTransactions';
 import '../styles/transactions.css';
@@ -10,7 +11,7 @@ export default function Transactions() {
   const [page, setPage] = useState(1);
   const [editing, setEditing] = useState(null);
   const query = useMemo(() => Object.fromEntries(Object.entries(filters).filter(([, value]) => value)), [filters]);
-  const { transactions, refresh } = useTransactions(query);
+  const { transactions, loading, refresh } = useTransactions(query);
   window.financeRefresh = refresh;
 
   const visible = transactions.slice((page - 1) * 10, page * 10);
@@ -24,6 +25,8 @@ export default function Transactions() {
     setEditing(null);
     refresh();
   };
+
+  if (loading) return <Spinner fullPage />;
 
   return (
     <main className="page transactions-page">

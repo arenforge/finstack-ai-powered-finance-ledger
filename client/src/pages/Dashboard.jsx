@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Bar, BarChart, CartesianGrid, Cell, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import SummaryCard from '../components/SummaryCard';
+import Spinner from '../components/Spinner';
 import { getAllSummary, getTransactions } from '../services/api';
 import '../styles/dashboard.css';
 
@@ -9,10 +10,13 @@ const colors = ['#4f46e5', '#22c55e', '#ef4444', '#f59e0b', '#0ea5e9', '#8b5cf6'
 export default function Dashboard() {
   const [summary, setSummary] = useState({ totalIncome: 0, totalExpense: 0, net: 0, savingsRate: 0, categories: [] });
   const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const load = async () => {
+    setLoading(true);
     setSummary(await getAllSummary());
     setTransactions(await getTransactions({ limit: 300 }));
+    setLoading(false);
   };
 
   useEffect(() => { load(); }, []);
@@ -45,6 +49,8 @@ export default function Dashboard() {
     });
     return Object.values(map);
   }, [transactions]);
+
+  if (loading) return <Spinner fullPage />;
 
   return (
     <main className="page dashboard-page">
