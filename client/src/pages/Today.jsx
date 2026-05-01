@@ -40,7 +40,7 @@ export default function Today() {
     refreshAll();
   };
 
-  if (loading) return <Spinner fullPage />;
+  if (loading) return <Spinner fullPage message="Getting your day ready..." />;
 
   return (
     <main className="page today-page">

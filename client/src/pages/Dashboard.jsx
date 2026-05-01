@@ -50,7 +50,7 @@ export default function Dashboard() {
     return Object.values(map);
   }, [transactions]);
 
-  if (loading) return <Spinner fullPage />;
+  if (loading) return <Spinner fullPage message="Crunching your numbers..." />;
 
   return (
     <main className="page dashboard-page">

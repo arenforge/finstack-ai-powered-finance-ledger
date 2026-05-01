@@ -38,7 +38,7 @@ export default function Monthly() {
 
   const savingsRate = summary.totalIncome ? Math.round((summary.net / summary.totalIncome) * 100) : 0;
 
-  if (loading) return <Spinner fullPage />;
+  if (loading) return <Spinner fullPage message="Organizing your monthly summary..." />;
 
   return (
     <main className="page monthly-page">

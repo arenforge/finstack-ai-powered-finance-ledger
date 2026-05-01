@@ -58,7 +58,12 @@ export default function QuickAddModal({ open, onClose, onAdded }) {
         <input type="text" placeholder="Description (optional)" value={form.description} onChange={(e) => update('description', e.target.value)} />
         <input type="date" value={form.date} onChange={(e) => update('date', e.target.value)} />
         {error && <p className="form-error">{error}</p>}
-        <button className="primary-button" type="submit" disabled={saving}>{saving ? 'Saving...' : 'Add Entry'}</button>
+        <button className="primary-button" type="submit" disabled={saving}>
+          <div className="button-content">
+            {saving && <div className="btn-spinner" />}
+            {saving ? 'Saving...' : 'Add Entry'}
+          </div>
+        </button>
       </form>
     </div>
   );

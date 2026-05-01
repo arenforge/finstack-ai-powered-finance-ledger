@@ -26,7 +26,7 @@ export default function Transactions() {
     refresh();
   };
 
-  if (loading) return <Spinner fullPage />;
+  if (loading) return <Spinner fullPage message="Fetching transaction history..." />;
 
   return (
     <main className="page transactions-page">
