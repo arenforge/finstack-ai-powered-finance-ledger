@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import SummaryCard from '../components/SummaryCard';
 import TransactionFeed from '../components/TransactionFeed';
+import Spinner from '../components/Spinner';
 import { getDailySummary, updateTransaction } from '../services/api';
 import { useTransactions } from '../hooks/useTransactions';
 import '../styles/today.css';
@@ -12,17 +13,22 @@ export default function Today() {
   const { transactions, refresh } = useTransactions({ date });
   const [summary, setSummary] = useState({ totalIncome: 0, totalExpense: 0, net: 0 });
   const [editing, setEditing] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
+    setLoading(true);
     const data = await getDailySummary(date);
     setSummary(data);
+    setLoading(false);
   }, [date]);
 
   useEffect(() => { load(); }, [load]);
 
   const refreshAll = async () => {
+    setLoading(true);
     await refresh();
     await load();
+    setLoading(false);
   };
 
   window.financeRefresh = refreshAll;
@@ -33,6 +39,8 @@ export default function Today() {
     setEditing(null);
     refreshAll();
   };
+
+  if (loading) return <Spinner fullPage message="Getting your day ready..." />;
 
   return (
     <main className="page today-page">

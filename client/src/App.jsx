@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import Spinner from './components/Spinner';
 import QuickAddModal from './components/QuickAddModal';
 import { AuthProvider, useAuth } from './hooks/useAuth.jsx';
 import Auth from './pages/Auth';
@@ -18,7 +19,7 @@ import './styles/global.css';
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
-  if (loading) return <div className="loading-screen">Loading...</div>;
+  if (loading) return <Spinner fullPage message="Securing your session..." />;
   if (!user) return <Navigate to="/" replace />;
   return children;
 }

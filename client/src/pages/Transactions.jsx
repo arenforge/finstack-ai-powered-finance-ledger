@@ -1,4 +1,6 @@
 import { useMemo, useState } from 'react';
+import Spinner from '../components/Spinner';
+import ConfirmModal from '../components/ConfirmModal';
 import { deleteTransaction, updateTransaction } from '../services/api';
 import { useTransactions } from '../hooks/useTransactions';
 import '../styles/transactions.css';
@@ -9,21 +11,30 @@ export default function Transactions() {
   const [filters, setFilters] = useState({ type: '', category: '', startDate: '', endDate: '', search: '' });
   const [page, setPage] = useState(1);
   const [editing, setEditing] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
   const query = useMemo(() => Object.fromEntries(Object.entries(filters).filter(([, value]) => value)), [filters]);
-  const { transactions, refresh } = useTransactions(query);
+  const { transactions, loading, refresh } = useTransactions(query);
   window.financeRefresh = refresh;
 
   const visible = transactions.slice((page - 1) * 10, page * 10);
   const pages = Math.max(1, Math.ceil(transactions.length / 10));
   const updateFilter = (field, value) => { setFilters({ ...filters, [field]: value }); setPage(1); };
 
-  const remove = async (id) => { await deleteTransaction(id); refresh(); };
+  const remove = async () => {
+    if (!deletingId) return;
+    await deleteTransaction(deletingId);
+    setDeletingId(null);
+    refresh();
+  };
+
   const save = async (event) => {
     event.preventDefault();
     await updateTransaction(editing._id, { ...editing, amount: Number(editing.amount) });
     setEditing(null);
     refresh();
   };
+
+  if (loading) return <Spinner fullPage message="Fetching transaction history..." />;
 
   return (
     <main className="page transactions-page">
@@ -38,11 +49,19 @@ export default function Transactions() {
       <section className="table-card">
         <table>
           <thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Type</th><th>Amount</th><th></th></tr></thead>
-          <tbody>{visible.map((item) => <tr key={item._id}><td>{new Date(item.date).toLocaleDateString('en-IN')}</td><td>{item.description || item.category}</td><td>{item.category}</td><td><span className={`badge ${item.type}`}>{item.type}</span></td><td className={item.type}>₹{item.amount.toLocaleString('en-IN')}</td><td><button className="icon-button" onClick={() => setEditing(item)}>✎</button><button className="icon-button danger-text" onClick={() => remove(item._id)}>×</button></td></tr>)}</tbody>
+          <tbody>{visible.map((item) => <tr key={item._id}><td>{new Date(item.date).toLocaleDateString('en-IN')}</td><td>{item.description || item.category}</td><td>{item.category}</td><td><span className={`badge ${item.type}`}>{item.type}</span></td><td className={item.type}>₹{item.amount.toLocaleString('en-IN')}</td><td><button className="icon-button" onClick={() => setEditing(item)}>✎</button><button className="icon-button danger-text" onClick={() => setDeletingId(item._id)}>×</button></td></tr>)}</tbody>
         </table>
       </section>
       <div className="pager"><button disabled={page === 1} onClick={() => setPage(page - 1)}>Prev</button><span>{page} / {pages}</span><button disabled={page === pages} onClick={() => setPage(page + 1)}>Next</button></div>
       {editing && <div className="modal-backdrop"><form className="quick-modal" onSubmit={save}><div className="modal-head"><h2>Edit</h2><button type="button" className="icon-button" onClick={() => setEditing(null)}>x</button></div><input value={editing.description} onChange={(e) => setEditing({ ...editing, description: e.target.value })} /><input type="number" value={editing.amount} onChange={(e) => setEditing({ ...editing, amount: e.target.value })} /><button className="primary-button">Save</button></form></div>}
+      
+      <ConfirmModal 
+        open={!!deletingId} 
+        title="Delete Transaction" 
+        message="Are you sure you want to remove this entry? This action cannot be undone." 
+        onConfirm={remove} 
+        onCancel={() => setDeletingId(null)} 
+      />
     </main>
   );
 }
