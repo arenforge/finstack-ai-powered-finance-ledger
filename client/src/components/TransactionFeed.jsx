@@ -1,3 +1,4 @@
+import EmptyState from './EmptyState';
 import { deleteTransaction } from '../services/api';
 
 const icons = {
@@ -19,7 +20,13 @@ export default function TransactionFeed({ transactions, onEdit, onChanged, empty
   };
 
   if (!transactions.length) {
-    return <div className="empty-state">{emptyText || 'Nothing logged yet today. Hit + to add your first entry.'}</div>;
+    return (
+      <EmptyState 
+        title="Quiet day so far" 
+        message={emptyText || "No transactions recorded yet. Tap the '+' button below to log your first spend or earning."}
+        icon="✍️"
+      />
+    );
   }
 
   return (
