@@ -2,11 +2,11 @@ import axios from 'axios';
 import { auth } from '../firebase';
 
 const api = axios.create({
-  baseURL: import.meta.env.REACT_APP_API_URL || 'http://localhost:5000'
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000'
 });
 
 api.interceptors.request.use(async (config) => {
-  if (import.meta.env.REACT_APP_DEMO_AUTH === 'true') {
+  if (import.meta.env.VITE_DEMO_AUTH === 'true') {
     config.headers.Authorization = 'Bearer dev-token';
     return config;
   }
@@ -40,5 +40,8 @@ export const deleteBill = (id) => api.delete(`/api/bills/${id}`).then((res) => r
 export const askAI = (question) => api.post('/api/ai/query', { question }).then((res) => res.data);
 export const getSharedBudgets = () => api.get('/api/shared-budgets').then((res) => res.data);
 export const createSharedBudget = (payload) => api.post('/api/shared-budgets', payload).then((res) => res.data);
+
+export const getUserProfile = () => api.get('/api/user/profile').then((res) => res.data);
+export const updateUserSettings = (payload) => api.put('/api/user/settings', payload).then((res) => res.data);
 
 export default api;
