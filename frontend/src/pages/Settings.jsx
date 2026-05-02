@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useAuth } from '../hooks/useAuth';
+import { getUserProfile, updateUserSettings } from '../services/api';
 import '../styles/global.css';
 
 export default function Settings() {
@@ -17,13 +17,10 @@ export default function Settings() {
 
   const fetchProfile = async () => {
     try {
-      const token = await user.getIdToken();
-      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/user/profile`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setProfile(res.data);
-      setCurrency(res.data.currency || 'USD');
-      setTheme(res.data.theme || 'light');
+      const data = await getUserProfile();
+      setProfile(data);
+      setCurrency(data.currency || 'USD');
+      setTheme(data.theme || 'light');
     } catch (error) {
       console.error('Error fetching profile', error);
     }
@@ -34,12 +31,7 @@ export default function Settings() {
     setSaving(true);
     setMessage('');
     try {
-      const token = await user.getIdToken();
-      await axios.put(
-        `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/user/settings`,
-        { currency, theme },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await updateUserSettings({ currency, theme });
       setMessage('Settings saved successfully!');
     } catch (error) {
       console.error('Error saving settings', error);
